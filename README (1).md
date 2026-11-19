@@ -4,7 +4,7 @@ Laboratório no **Cisco Packet Tracer** que simula a rede de um escritório pequ
 
 **Objetivo:** praticar configuração e **troubleshooting** de redes (foco em suporte N1 → infraestrutura).
 
-![Topologia da rede](02-topologia/topologia.png)
+![Topologia da rede](https://github.com/DanielCauldron/rede-pequeno-escritorio-vlans/blob/main/topologia.png)
 
 ## Entendendo o projeto de forma simples
 
