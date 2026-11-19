@@ -71,7 +71,7 @@ Endereços `.1` a `.10` de cada rede ficam reservados para IP fixo (evita confli
 
 ## Resultados
 
-Todos os testes de conectividade passaram (DHCP, gateway, equipe → servidores, internet, visitantes bloqueados da rede interna). Tabela completa em [`04-testes/testes-validacao.md`](04-testes/testes-validacao.md).
+Todos os testes de conectividade passaram (DHCP, gateway, equipe → servidores, internet, visitantes bloqueados da rede interna). Tabela completa em [`04-testes/testes-validacao.md`](https://github.com/DanielCauldron/rede-pequeno-escritorio-vlans/blob/main/testes-validacao.md).
 
 ## Habilidades praticadas
 
@@ -91,7 +91,7 @@ VLAN e trunk 802.1Q · roteamento Layer 3 · DHCP · ACL estendida · NAT/PAT ·
 
 ## Método de troubleshooting
 
-Cabo → VLAN → IP → gateway → rota → ACL. Detalhes e erros reais em [`05-troubleshooting/cenarios-de-falha.md`](05-troubleshooting/cenarios-de-falha.md).
+Cabo → VLAN → IP → gateway → rota → ACL. Detalhes e erros reais em [`05-troubleshooting/cenarios-de-falha.md`](https://github.com/DanielCauldron/rede-pequeno-escritorio-vlans/blob/main/cenarios-de-falha.md).
 
 ## Próximos passos
 
