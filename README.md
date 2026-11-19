@@ -1,104 +1,199 @@
-# Rede para um pequeno escritório (segura, segmentada, confiável)
+# Aprendizados práticos — Projeto de Redes Cisco
 
-Laboratório no **Cisco Packet Tracer** que simula a rede de um escritório pequeno: VLANs separadas, DHCP, roteamento entre redes, acesso restrito para visitantes, NAT e Wi-Fi.
+## Sobre minha experiência neste laboratório
 
-**Objetivo:** praticar configuração e **troubleshooting** de redes (foco em suporte N1 → infraestrutura).
+Desenvolvi este laboratório no Cisco Packet Tracer com o objetivo de compreender como funciona a infraestrutura de rede de um pequeno escritório.
 
-<img width="1900" height="722" alt="topologia" src="https://github.com/user-attachments/assets/29f1a309-4046-4ff0-88ba-35f462b2a035" />
+Durante a construção, trabalhei na organização das redes, configuração dos equipamentos, comunicação entre diferentes segmentos e controle de acesso.
 
+O foco não foi apenas fazer a topologia funcionar, mas entender o motivo de cada configuração e como identificar possíveis falhas.
 
-## Entendendo o projeto de forma simples
+## 1. Separando os dispositivos por função
 
-Pensa na rede como um **prédio**:
+**O que fiz:**
 
-| No prédio | Na rede | Para quê |
+Criei cinco VLANs para separar o gerenciamento, a equipe, os servidores, os visitantes e os dispositivos de CFTV/IoT.
+
+Configurei as portas dos switches para conectar cada dispositivo à VLAN correspondente e utilizei trunks 802.1Q para transportar diferentes VLANs entre os equipamentos.
+
+**O que testei:**
+
+Verifiquei a associação das portas às VLANs e a comunicação entre os switches.
+
+**O que compreendi:**
+
+Aprendi que a separação lógica permite organizar melhor uma rede corporativa. Mesmo utilizando a mesma infraestrutura física, os dispositivos podem pertencer a redes diferentes.
+
+Também entendi que uma configuração incorreta de VLAN ou trunk pode impedir a comunicação, mesmo quando os cabos estão conectados corretamente.
+
+## 2. Configurando a distribuição de endereços IP
+
+**O que fiz:**
+
+Planejei uma faixa de endereços IP para cada VLAN.
+
+Configurei DHCP para distribuir automaticamente endereços aos dispositivos da equipe e aos visitantes. Para servidores, câmeras e equipamentos de gerenciamento, utilizei endereços fixos.
+
+**O que testei:**
+
+Verifiquei se os computadores recebiam automaticamente:
+
+- Endereço IP.
+- Máscara de sub-rede.
+- Gateway padrão.
+
+Também conferi se os endereços recebidos pertenciam à rede correta.
+
+**O que compreendi:**
+
+Entendi que o DHCP facilita a administração de uma rede, evitando a configuração manual de cada computador.
+
+Também percebi a importância de planejar as faixas de endereçamento e reservar endereços para equipamentos que precisam manter um IP fixo.
+
+## 3. Fazendo redes diferentes se comunicarem
+
+**O que fiz:**
+
+Configurei o switch Layer 3 com interfaces virtuais (SVIs) para funcionar como gateway das VLANs.
+
+Ativei o roteamento utilizando `ip routing`.
+
+**O que testei:**
+
+Verifiquei a comunicação entre dispositivos de redes diferentes e o acesso da equipe aos servidores.
+
+**O que compreendi:**
+
+Aprendi que dispositivos de VLANs diferentes precisam de um equipamento de camada 3 para realizar a comunicação.
+
+Também compreendi a importância do gateway padrão: ele indica para onde o dispositivo deve encaminhar pacotes destinados a outras redes.
+
+Esse conhecimento ajuda a investigar situações em que um computador consegue acessar dispositivos da própria rede, mas não consegue alcançar outros segmentos.
+
+## 4. Restringindo o acesso dos visitantes
+
+**O que fiz:**
+
+Configurei uma ACL estendida para impedir que a VLAN de visitantes acessasse as redes internas.
+
+Mantive a possibilidade de acesso à internet para essa rede.
+
+**O que testei:**
+
+Realizei testes de comunicação entre a rede de visitantes e os recursos internos, além de verificar o acesso à internet simulada.
+
+**O que compreendi:**
+
+Entendi que permitir acesso à internet não significa permitir acesso aos servidores, computadores e demais recursos internos.
+
+A ACL permite estabelecer regras de comunicação de acordo com a origem e o destino do tráfego.
+
+Essa configuração demonstra como a segmentação e o controle de acesso podem contribuir para a segurança da infraestrutura.
+
+## 5. Entendendo a saída para a internet
+
+**O que fiz:**
+
+Configurei um roteador de borda e outro roteador representando o provedor de internet.
+
+Implementei NAT Overload (PAT) e rotas estáticas para permitir a comunicação entre a rede interna e a rede externa simulada.
+
+**O que testei:**
+
+Verifiquei a comunicação entre os dispositivos internos e o servidor que representa a internet no laboratório.
+
+**O que compreendi:**
+
+Entendi que os endereços privados utilizados dentro da empresa precisam ser traduzidos para permitir a comunicação externa por meio do NAT.
+
+Também compreendi que uma rota padrão é necessária para indicar o caminho utilizado quando o destino não está em uma rede conhecida pelo equipamento.
+
+## 6. Investigando falhas de conectividade
+
+**O que pratiquei:**
+
+Utilizei comandos de verificação para analisar o estado das interfaces, VLANs, trunks, rotas e listas de acesso.
+
+Entre eles:
+
+- `show vlan brief`
+- `show interfaces trunk`
+- `show ip interface brief`
+- `show ip route`
+- `show access-lists`
+- `show running-config`
+- `ping`
+- `tracert`
+
+**O que compreendi:**
+
+Aprendi que não é adequado começar alterando configurações sem antes identificar onde está a falha.
+
+Passei a entender o troubleshooting como uma sequência de investigação:
+
+1. Verificar a conexão física.
+2. Conferir a VLAN da porta.
+3. Verificar IP e máscara.
+4. Testar o gateway.
+5. Conferir o roteamento.
+6. Investigar possíveis bloqueios de ACL.
+
+Essa sequência ajuda a reduzir tentativas desnecessárias e torna o diagnóstico mais organizado.
+
+## 7. Validação do laboratório
+
+Após concluir as configurações, realizei testes para verificar o funcionamento da rede.
+
+| Cenário | Resultado esperado | Validação |
 |---|---|---|
-| Andar | **VLAN** | Separa os grupos (equipe, visitantes, servidores...) |
-| Elevador | **Trunk** | Leva todas as VLANs entre os switches por um único cabo |
-| Porta da sala | **Porta de acesso** | Liga um dispositivo a uma VLAN específica |
-| Porteiro | **Gateway / SVI** | Decide quem pode ir de um andar para outro (ACL) e quem sai para a rua (internet) |
+| Computador da equipe recebe IP | DHCP funcionando | Aprovado |
+| Visitante recebe IP | DHCP funcionando | Aprovado |
+| Dispositivo acessa seu gateway | Comunicação local | Aprovado |
+| Equipe acessa servidores | Comunicação entre VLANs | Aprovado |
+| Visitantes acessam redes internas | Acesso bloqueado | Aprovado |
+| Visitantes acessam internet | Acesso permitido | Aprovado |
+| Rede interna acessa servidor externo | NAT e rotas funcionando | Aprovado |
 
-## Equipamentos
+Os testes detalhados estão documentados em `04-testes/testes-validacao.md`.
 
-| Equipamento | Modelo | Função |
-|---|---|---|
-| CORE-SW | Switch L3 3560-24PS | VLANs, roteamento entre VLANs (SVIs), DHCP e ACL |
-| FW-ROUTER | Roteador 2911 | Borda da rede interna e NAT |
-| ISP-ROUTER | Roteador 2911 | Simula o provedor de internet |
-| SW-EQUIPE, SW-VISITANTES, SW-SERVIDORES, SW-CCTV | Switch 2960-24TT | Acesso dos dispositivos finais |
-| AP-EQUIPE, AP-VISITANTES | Access Point | Wi-Fi separado por VLAN |
+## 8. O que levo deste projeto para o suporte técnico
 
-## Fluxo da rede
+Este laboratório ajudou a relacionar conceitos de redes com situações que podem aparecer na rotina de suporte técnico.
 
-```
-INTERNET-SERVER (8.8.8.8)
-        |
-   ISP-ROUTER  (8.8.8.1 | 200.200.200.2)
-        |
-   FW-ROUTER   (200.200.200.1 | 10.0.0.2)   <- NAT
-        |
-   CORE-SW (L3) (10.0.0.1)    <- VLANs, SVIs, DHCP, ACL
-    |        |         |        |
-SW-EQUIPE SW-VISITANTES SW-SERVIDORES SW-CCTV
-PC + AP   PC + AP       Servidor      Câmera
-```
+Alguns exemplos:
 
-Arquivo do laboratório: [`02-topologia/projeto.pkt`](02-topologia/projeto.pkt)
+- Computador sem endereço IP: investigar DHCP e configuração de rede.
+- Computador conectado, mas sem comunicação: verificar VLAN, gateway e conectividade.
+- Acesso a um servidor indisponível: investigar roteamento e regras de acesso.
+- Falha de internet: verificar gateway, rota padrão e NAT.
+- Dispositivo conectado à rede incorreta: conferir a configuração da porta no switch.
 
-## Endereçamento
+O principal aprendizado foi compreender que problemas aparentemente semelhantes podem ter causas diferentes. Por isso, é importante investigar cada camada antes de realizar alterações.
 
-| VLAN | Nome | Rede | Gateway | IP |
-|---|---|---|---|---|
-| 10 | Gerenciamento | 192.168.10.0/24 | .1 | fixo |
-| 20 | Equipe | 192.168.20.0/24 | .1 | DHCP (.11+) |
-| 30 | Servidores | 192.168.30.0/24 | .1 | fixo |
-| 40 | Wi-Fi Visitantes | 192.168.40.0/24 | .1 | DHCP (.11+) |
-| 50 | CCTV/IoT | 192.168.50.0/24 | .1 | fixo |
+## 9. Próximas evoluções
 
-Links: CORE-SW ↔ FW-ROUTER `10.0.0.0/30` · FW-ROUTER ↔ ISP `200.200.200.0/30` · Internet `8.8.8.0/24`.
-Endereços `.1` a `.10` de cada rede ficam reservados para IP fixo (evita conflito com o DHCP).
+Este laboratório representa uma etapa inicial de aprofundamento em infraestrutura de redes.
 
-## O que foi implementado
+Como continuidade dos estudos, pretendo praticar:
 
-- Segmentação em 5 VLANs com trunks 802.1Q
-- Roteamento entre VLANs no switch Layer 3 (SVIs + `ip routing`)
-- DHCP para Equipe e Visitantes, IP fixo para servidores, câmera e gerenciamento
-- ACL: visitantes **não** acessam a rede interna (nem por Wi-Fi), mas **têm internet**
-- Equipe acessa os servidores
-- NAT overload (PAT) e rotas estáticas/padrão
-- Dois Wi-Fi separados (EQUIPE-WIFI e VISITANTES-WIFI) com WPA2-PSK
+- Port Security para controle de dispositivos conectados às portas.
+- DHCP Relay para distribuição de endereços entre diferentes redes.
+- Spanning Tree Protocol (STP) para prevenção de loops.
+- Monitoramento de equipamentos de rede.
+- Diagnóstico de falhas em cenários mais próximos de ambientes corporativos reais.
 
-**Fora do escopo:** VPN e IPS aparecem na imagem de referência, mas o Packet Tracer não simula esses recursos.
+## Conclusão
 
-## Resultados
+O desenvolvimento deste projeto me permitiu sair da teoria e compreender melhor como uma rede corporativa é estruturada.
 
-Todos os testes de conectividade passaram (DHCP, gateway, equipe → servidores, internet, visitantes bloqueados da rede interna). Tabela completa em [`04-testes/testes-validacao.md`](04-testes/testes-validacao.md).
+Consegui configurar os equipamentos, estabelecer a comunicação entre diferentes redes, aplicar restrições de acesso e validar o funcionamento por meio de testes.
 
-## Habilidades praticadas
+Também desenvolvi uma forma mais organizada de investigar problemas de conectividade, relacionando os conceitos de redes com situações encontradas na área de suporte técnico.
 
-VLAN e trunk 802.1Q · roteamento Layer 3 · DHCP · ACL estendida · NAT/PAT · rotas estáticas · Wi-Fi com WPA2 · leitura de `show` e troubleshooting por camadas.
+Meu objetivo com este laboratório é fortalecer minha base técnica e evoluir profissionalmente em direção à infraestrutura de TI.
 
-## Estrutura do repositório
+---
 
-| Pasta | Conteúdo |
-|---|---|
-| `00-padrao/` | Padrão de nomes, template de documento e formato de commit |
-| `01-planejamento/` | Plano de endereçamento e decisões |
-| `02-topologia/` | `projeto.pkt` e imagem da topologia |
-| `03-configuracoes/` | Comandos de cada equipamento |
-| `04-testes/` | Testes de validação |
-| `05-troubleshooting/` | Erros reais, método de diagnóstico e cenários de treino |
-| `06-imagens/` | Prints |
-
-## Método de troubleshooting
-
-Cabo → VLAN → IP → gateway → rota → ACL. Detalhes e erros reais em [`05-troubleshooting/cenarios-de-falha.md`](05-troubleshooting/cenarios-de-falha.md).
-
-## Próximos passos
-
-- Praticar cenários de falha (VLAN errada, DHCP, trunk, rota, ACL)
-- Evoluir para DHCP relay, port-security e VPN em ambiente real
-
-## Autor
-
-Daniel Caldeirão, analista de suporte N1 em transição para dados/infraestrutura.
+**Autor:** Daniel Caldeirão  
+**Laboratório:** Cisco Packet Tracer  
+**Área:** Redes de Computadores | Suporte Técnico | Infraestrutura de TI
