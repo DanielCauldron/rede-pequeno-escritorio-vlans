@@ -42,7 +42,7 @@ SW-EQUIPE SW-VISITANTES SW-SERVIDORES SW-CCTV
 PC + AP   PC + AP       Servidor      Câmera
 ```
 
-Arquivo do laboratório: [`02-topologia/projeto.pkt`](02-topologia/projeto.pkt)
+Arquivo do laboratório: [`02-topologia/projeto.pkt`](https://github.com/DanielCauldron/rede-pequeno-escritorio-vlans/blob/main/topologia.png)
 
 ## Endereçamento
 
